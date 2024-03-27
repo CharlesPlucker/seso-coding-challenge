@@ -2,7 +2,7 @@ const MinHeap = require("../lib/min-heap");
 
 describe('MinHeap', () => {
     describe('Supports Adding Items', () => {
-        test('should keep track of the min for nomal cases and default valueKey', () => {
+        test('should keep track of the min for nomal cases', () => {
             const testMinHeap = new MinHeap();
             testMinHeap.add({'value': 10});
             expect(testMinHeap.peek().value).toBe(10);
@@ -17,6 +17,9 @@ describe('MinHeap', () => {
             expect(testMinHeap.peek().value).toBe(7);
 
             testMinHeap.add({'value': -3});
+            expect(testMinHeap.peek().value).toBe(-3);
+
+            testMinHeap.add({'value': 0});
             expect(testMinHeap.peek().value).toBe(-3);
         });
 
@@ -56,27 +59,14 @@ describe('MinHeap', () => {
         });
     });
 
-    describe('Supports Custom Comparator Key', () => {
-        test('should keep track of the min for nomal cases and custom valueKey', () => {
-            const testMinHeap = new MinHeap('timestamp');
-            testMinHeap.add({'timestamp': 10});
-            expect(testMinHeap.peek().timestamp).toBe(10);
-
-            testMinHeap.add({'timestamp': 11});
-            expect(testMinHeap.peek().timestamp).toBe(10);
-
-            testMinHeap.add({'timestamp': 7});
-            expect(testMinHeap.peek().timestamp).toBe(7);
-
-            testMinHeap.add({'timestamp': 10});
-            expect(testMinHeap.peek().timestamp).toBe(7);
-
-            testMinHeap.add({'timestamp': 3});
-            expect(testMinHeap.peek().timestamp).toBe(3);
-
-            expect(testMinHeap.remove().timestamp).toBe(3);
-
-            expect(testMinHeap.peek().value).toBe(undefined);
+    describe('Support isEmpty', () => {
+        test('should return true if the min heap is empty, and false otherwise', () => {
+            const testMinHeap = new MinHeap();
+            expect(testMinHeap.isEmpty()).toBe(true);
+            testMinHeap.add({'value': -2});
+            expect(testMinHeap.isEmpty()).toBe(false);
+            testMinHeap.remove();
+            expect(testMinHeap.isEmpty()).toBe(true);
         });
     });
 });
