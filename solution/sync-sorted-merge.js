@@ -19,7 +19,8 @@ const syncSortedMerge = (logSources, printer) => {
       logMinHeap.add({
         value: nextLog.date,
         log: nextLog,
-        source: logSource})
+        source: logSource
+      });
       }
   });
 
@@ -32,7 +33,8 @@ const syncSortedMerge = (logSources, printer) => {
       logMinHeap.add({
         value: nextLog.date,
         log: nextLog,
-        source})
+        source
+      });
     }
   }
   printer.done();
