@@ -52,21 +52,24 @@ const asyncSortedMerge = async (logSources, printer) => {
         return Promise.resolve();
       }
 
-      const logPromise = logSources[index].popAsync();
-      resource.promise = logPromise;
-      logPromise.then(nextLog => {
-        if (nextLog) {
-          addResultToMinHeap(index, nextLog);
-          addResultToResourceTracker(index, nextLog);
-        }
-        else {
+      if (!resource.promise) {
+        const logPromise = logSources[index].popAsync();
+        resource.promise = logPromise;
+        logPromise.then(nextLog => {
+          if (nextLog) {
+            addResultToMinHeap(index, nextLog);
+            addResultToResourceTracker(index, nextLog);
+          }
+          else {
+            markLogSourceAsEmpty(index);
+          }
+        }).catch( error => {
           markLogSourceAsEmpty(index);
-        }
-      }).catch( error => {
-        markLogSourceAsEmpty(index);
-      });
-
-      return logPromise;
+        });
+        return logPromise;
+      }
+      
+      return Promise.resolve();
     });
   };
 
@@ -80,7 +83,7 @@ const asyncSortedMerge = async (logSources, printer) => {
   });
 
   const firstRoundPromises = fetchAndProcessNextRound();
-  const promiseResults = await Promise.allSettled(firstRoundPromises);
+  await Promise.allSettled(firstRoundPromises);
 
   while (!logMinHeap.isEmpty()) {
     const {log, index} = logMinHeap.remove();
